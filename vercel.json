@@ -1,0 +1,8 @@
+{
+  "projectSettings": {
+    "framework": null,
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
+    "rootDirectory": "qa-chatbot-react"
+  }
+}

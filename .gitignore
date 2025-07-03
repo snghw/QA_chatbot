@@ -189,3 +189,13 @@ thumb
 sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/python,react
+
+# Python venv
+qa-backend-faiss/venv/
+__pycache__/
+
+# Node modules
+qa-chatbot-react/node_modules/
+
+# Parcel output
+qa-chatbot-react/dist/
