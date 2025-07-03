@@ -4,16 +4,32 @@ from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import os
 import json
+import logging
 from dotenv import load_dotenv
 from pathlib import Path
 
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # 로컬 모듈 import
-from models.embeddings import EmbeddingModel
-from services.json_search_service import JSONSearchService
-from services.answer_generator import AnswerGenerator
+try:
+    from models.embeddings import EmbeddingModel
+    from services.json_search_service import JSONSearchService
+    from services.answer_generator import AnswerGenerator
+    logger.info("✅ 모든 모듈 임포트 성공")
+except ImportError as e:
+    logger.error(f"❌ 모듈 임포트 실패: {e}")
+    raise
 
 # 환경 변수 로딩
 load_dotenv()
+
+# 환경 변수에서 포트 정보 가져오기
+PORT = int(os.getenv("PORT", "8080"))
+HOST = os.getenv("HOST", "0.0.0.0")
+
+logger.info(f"🚀 서버 설정: {HOST}:{PORT}")
 
 # FastAPI 앱 초기화
 app = FastAPI(
@@ -25,7 +41,10 @@ app = FastAPI(
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:1234", "http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:1234",  # 개발용
+        "https://qa-chatbot-pink.vercel.app"  # ✅ Vercel 배포 도메인
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -102,17 +121,21 @@ async def initialize_services():
     global embedding_model, answer_generator
     
     try:
-        # 디렉토리 생성
-        os.makedirs("./data/processed", exist_ok=True)
+        # 데이터 디렉토리 생성 (권한 확인)
+        data_dir = Path("./data/processed")
+        data_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"✅ 데이터 디렉토리 생성: {data_dir.absolute()}")
         
         # 임베딩 모델 초기화
         model_name = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+        logger.info(f"🤖 임베딩 모델 로드 시작: {model_name}")
+        
         embedding_model = EmbeddingModel(model_name)
-        print(f"✅ 임베딩 모델 로드 완료: {model_name}")
+        logger.info(f"✅ 임베딩 모델 로드 완료: {model_name}")
         
         # 답변 생성기 초기화
         answer_generator = AnswerGenerator()
-        print("✅ 답변 생성기 초기화 완료")
+        logger.info("✅ 답변 생성기 초기화 완료")
         
         # 기존 JSON 파일들 로드
         await load_existing_manuals()
@@ -120,7 +143,7 @@ async def initialize_services():
         return True
         
     except Exception as e:
-        print(f"❌ 서비스 초기화 오류: {e}")
+        logger.error(f"❌ 서비스 초기화 오류: {e}")
         return False
 
 async def load_existing_manuals():
@@ -129,6 +152,7 @@ async def load_existing_manuals():
     
     data_dir = Path("./data/processed")
     if not data_dir.exists():
+        logger.warning(f"⚠️ 데이터 디렉토리가 존재하지 않음: {data_dir}")
         return
     
     # 차량별로 가장 최신 파일만 선택 (연식 제거)
@@ -164,10 +188,10 @@ async def load_existing_manuals():
                         'year': year
                     }
             else:
-                print(f"⚠️ 인식되지 않은 차량: {json_file.name} (추출된 이름: {vehicle_name})")
+                logger.warning(f"⚠️ 인식되지 않은 차량: {json_file.name} (추출된 이름: {vehicle_name})")
         
         except Exception as e:
-            print(f"❌ {json_file} 로드 실패: {e}")
+            logger.error(f"❌ {json_file} 로드 실패: {e}")
     
     # 선택된 파일들로 검색 서비스 생성 (연식 없는 이름으로)
     for vehicle_name, file_info in vehicle_files.items():
@@ -177,9 +201,9 @@ async def load_existing_manuals():
             vehicle_search_services[vehicle_name] = search_service  # 연식 없는 이름으로 저장
             
             sections_count = len(file_info['data'].get("sections", []))
-            print(f"✅ {vehicle_name} 매뉴얼 로드 완료: {file_info['file'].name} ({file_info['year']}년, {sections_count}개 섹션)")
+            logger.info(f"✅ {vehicle_name} 매뉴얼 로드 완료: {file_info['file'].name} ({file_info['year']}년, {sections_count}개 섹션)")
         except Exception as e:
-            print(f"❌ {vehicle_name} 검색 서비스 생성 실패: {e}")
+            logger.error(f"❌ {vehicle_name} 검색 서비스 생성 실패: {e}")
 
 def extract_vehicle_from_content(content: str) -> str:
     """파일 내용에서 차량명 추출"""
@@ -289,9 +313,12 @@ def generate_vehicle_filename(vehicle_name: str) -> str:
 # 앱 시작 이벤트
 @app.on_event("startup")
 async def startup_event():
+    logger.info("🚀 앱 시작 이벤트 시작")
     success = await initialize_services()
     if not success:
-        print("⚠️ 서비스 초기화 실패")
+        logger.error("⚠️ 서비스 초기화 실패")
+    else:
+        logger.info("✅ 서비스 초기화 완료")
 
 # API 엔드포인트들
 @app.get("/")
@@ -304,6 +331,11 @@ def root():
     
     return {
         "message": "현대자동차 매뉴얼 QA 시스템 v2.0",
+        "status": "healthy",
+        "server_info": {
+            "host": HOST,
+            "port": PORT
+        },
         "supported_vehicles": FRONTEND_VEHICLES,
         "available_vehicles": available_vehicles_frontend,
         "backend_vehicles": list(vehicle_search_services.keys()),
@@ -344,7 +376,11 @@ def health_check():
         "supported_vehicles": len(FRONTEND_VEHICLES),
         "available_vehicles": len(available_vehicles_frontend),
         "loaded_manuals": available_vehicles_frontend,
-        "backend_vehicles": list(vehicle_search_services.keys())
+        "backend_vehicles": list(vehicle_search_services.keys()),
+        "server_info": {
+            "host": HOST,
+            "port": PORT
+        }
     }
 
 # JSON 업로드 엔드포인트 (차량별)
@@ -388,8 +424,8 @@ async def upload_json(vehicle: str, file: UploadFile = File(...)):
         
         sections_count = len(json_data.get("sections", []))
         
-        print(f"✅ {backend_vehicle} 매뉴얼 업로드 완료: {filename}")
-        print(f"   📊 섹션 수: {sections_count}")
+        logger.info(f"✅ {backend_vehicle} 매뉴얼 업로드 완료: {filename}")
+        logger.info(f"   📊 섹션 수: {sections_count}")
         
         return UploadResponse(
             message=f"'{vehicle}' 매뉴얼 업로드 및 인덱싱 완료!",
@@ -401,6 +437,7 @@ async def upload_json(vehicle: str, file: UploadFile = File(...)):
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="잘못된 JSON 형식입니다.")
     except Exception as e:
+        logger.error(f"❌ JSON 파일 처리 중 오류: {str(e)}")
         raise HTTPException(status_code=500, detail=f"JSON 파일 처리 중 오류: {str(e)}")
 
 # 질문 응답 엔드포인트
@@ -414,7 +451,7 @@ async def ask_question(item: Question):
     # 프론트엔드 차량명을 백엔드 형식으로 변환
     backend_vehicle = map_vehicle_to_backend(item.vehicle)
     
-    print(f"🔍 {item.vehicle} ({backend_vehicle}) 매뉴얼에서 검색 시작: '{item.q}'")
+    logger.info(f"🔍 {item.vehicle} ({backend_vehicle}) 매뉴얼에서 검색 시작: '{item.q}'")
     
     if backend_vehicle not in vehicle_search_services:
         available_vehicles_frontend = [
@@ -433,7 +470,7 @@ async def ask_question(item: Question):
         # 선택된 차량의 검색 서비스만 사용
         search_service = vehicle_search_services[backend_vehicle]
         
-        print(f"🔍 {backend_vehicle} 매뉴얼 검색 시작: '{item.q}'")
+        logger.info(f"🔍 {backend_vehicle} 매뉴얼 검색 시작: '{item.q}'")
         
         results = search_service.search_sections(item.q, k=3)
         
@@ -444,16 +481,16 @@ async def ask_question(item: Question):
                 sources=[]
             )
         
-        print(f"📊 {backend_vehicle} 검색 결과: {len(results)}개 섹션 발견")
+        logger.info(f"📊 {backend_vehicle} 검색 결과: {len(results)}개 섹션 발견")
         for i, result in enumerate(results):
-            print(f"  {i+1}. [{result['score']:.3f}] {result['title']} (페이지 {result['page_range']})")
+            logger.info(f"  {i+1}. [{result['score']:.3f}] {result['title']} (페이지 {result['page_range']})")
         
         # 최고 점수 섹션으로 답변 생성
         best_section = results[0]
         
-        print(f"🤖 답변 생성 중 - 섹션: {best_section['title']}")
-        print(f"   전체 내용 길이: {len(best_section['content'])}자")
-        print(f"   내용 미리보기: {best_section['content'][:200]}...")
+        logger.info(f"🤖 답변 생성 중 - 섹션: {best_section['title']}")
+        logger.info(f"   전체 내용 길이: {len(best_section['content'])}자")
+        logger.info(f"   내용 미리보기: {best_section['content'][:200]}...")
         
         answer = await answer_generator.generate_answer(item.q, best_section)
         
@@ -476,7 +513,7 @@ async def ask_question(item: Question):
         )
         
     except Exception as e:
-        print(f"❌ {backend_vehicle} 질문 처리 중 오류: {str(e)}")
+        logger.error(f"❌ {backend_vehicle} 질문 처리 중 오류: {str(e)}")
         raise HTTPException(status_code=500, detail=f"질문 처리 중 오류: {str(e)}")
 
 # 디버깅 검색 엔드포인트
@@ -523,14 +560,17 @@ async def debug_search(item: Question):
         }
         
     except Exception as e:
+        logger.error(f"❌ 디버깅 검색 중 오류: {str(e)}")
         raise HTTPException(status_code=500, detail=f"디버깅 검색 중 오류: {str(e)}")
 
+# 메인 실행 부분
 if __name__ == "__main__":
     import uvicorn
+    logger.info(f"🚀 서버 시작: {HOST}:{PORT}")
     uvicorn.run(
         "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
+        host=HOST,
+        port=PORT,
+        reload=False,  # 프로덕션에서는 reload 비활성화
         log_level="info"
     )
