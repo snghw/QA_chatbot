@@ -3,7 +3,8 @@ import { MessageCircle, Send, Car, Book, User, Bot, Loader, CheckCircle, AlertCi
 import { marked } from 'marked';
 
 // ✅ .env에서 불러오기
-const BASE_URL = "https://qa-backend-faiss.fly.dev";
+// const BASE_URL = "https://qa-backend-faiss.fly.dev";
+const BASE_URL = "http://localhost:8080"
 
 // marked 설정
 marked.setOptions({
@@ -136,8 +137,8 @@ function App() {
   if (vehicleSelectionStep) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg">
+        {/* 🔥 고정 헤더 - sticky 클래스 추가 */}
+        <div className="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg">
           <div className="max-w-4xl mx-auto px-6 py-4">
             <div className="flex items-center space-x-3">
               <div className="bg-white p-2 rounded-lg shadow-sm">
@@ -158,7 +159,7 @@ function App() {
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content - 헤더 높이만큼 패딩 추가 */}
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             
@@ -234,9 +235,37 @@ function App() {
                     </div>
                   </div>
                 </div>
+
+                {/* 추가 컨텐츠 - 스크롤 테스트용 */}
+                <div className="p-8 bg-gray-50">
+                  <h4 className="text-lg font-semibold mb-4">서비스 특징</h4>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                        <Bot className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <h5 className="font-semibold mb-2">AI 기반 답변</h5>
+                      <p className="text-sm text-gray-600">최신 AI 기술로 정확한 답변을 제공합니다.</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                        <Book className="w-6 h-6 text-green-600" />
+                      </div>
+                      <h5 className="font-semibold mb-2">공식 매뉴얼 기반</h5>
+                      <p className="text-sm text-gray-600">현대자동차 공식 매뉴얼만을 사용합니다.</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                        <MessageCircle className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <h5 className="font-semibold mb-2">24/7 지원</h5>
+                      <p className="text-sm text-gray-600">언제든지 궁금한 점을 물어보세요.</p>
+                    </div>
+                  </div>
+                </div>
               </>
             ) : (
-              /* 매뉴얼이 있는 경우 기존 차량 선택 UI */
+              /* 매뉴얼이 있는 경우 차량 선택 UI */
               <>
                 <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-b">
                   <h2 className="text-xl font-bold text-gray-800 mb-2">차량을 선택해주세요</h2>
@@ -306,6 +335,49 @@ function App() {
                     </button>
                   </div>
                 </div>
+
+                {/* 매뉴얼 등록 안내 - 매뉴얼이 있는 경우에도 표시 */}
+                <div className="p-6 bg-blue-50 border-t border-blue-100">
+                  <div className="flex items-start space-x-3">
+                    <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="text-left">
+                      <h5 className="font-semibold text-blue-800 mb-1">매뉴얼 등록 안내</h5>
+                      <p className="text-sm text-blue-700">
+                        • 현재 매뉴얼 자동 등록 기능을 개발 중입니다<br />
+                        • 공식 현대자동차 매뉴얼 사이트에서 차량별 매뉴얼을 확인하실 수 있습니다<br />
+                        • 등록 기능 완료 시 이메일로 안내드리겠습니다
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 서비스 특징 - 매뉴얼이 있는 경우에도 표시 */}
+                <div className="p-8 bg-gray-50">
+                  <h4 className="text-lg font-semibold mb-4 text-center">서비스 특징</h4>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                        <Bot className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <h5 className="font-semibold mb-2">AI 기반 답변</h5>
+                      <p className="text-sm text-gray-600">최신 AI 기술로 정확한 답변을 제공합니다.</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                        <Book className="w-6 h-6 text-green-600" />
+                      </div>
+                      <h5 className="font-semibold mb-2">공식 매뉴얼 기반</h5>
+                      <p className="text-sm text-gray-600">현대자동차 공식 매뉴얼만을 사용합니다.</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                        <MessageCircle className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <h5 className="font-semibold mb-2">24/7 지원</h5>
+                      <p className="text-sm text-gray-600">언제든지 궁금한 점을 물어보세요.</p>
+                    </div>
+                  </div>
+                </div>
               </>
             )}
           </div>
@@ -314,11 +386,11 @@ function App() {
     );
   }
 
-  // 채팅 화면 (기존과 동일)
+  // 채팅 화면
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg">
+      {/* 🔥 고정 헤더 - sticky 클래스 추가 */}
+      <div className="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -353,7 +425,7 @@ function App() {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - 헤더가 고정되어 있으므로 패딩 조정 */}
       <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Chat Header */}
@@ -394,13 +466,15 @@ function App() {
                         className="text-sm leading-relaxed
                           [&>h1]:text-lg [&>h1]:font-bold [&>h1]:text-gray-800 [&>h1]:mb-3 [&>h1]:flex [&>h1]:items-center
                           [&>h2]:text-base [&>h2]:font-semibold [&>h2]:text-gray-700 [&>h2]:mt-4 [&>h2]:mb-2 [&>h2]:flex [&>h2]:items-center
+                          [&>h3]:text-sm [&>h3]:font-semibold [&>h3]:text-gray-700 [&>h3]:mt-3 [&>h3]:mb-2 [&>h3]:flex [&>h3]:items-center
                           [&>p]:mb-2 [&>p]:leading-relaxed
                           [&>strong]:font-semibold [&>strong]:text-blue-600
                           [&>blockquote]:border-l-4 [&>blockquote]:border-blue-400 [&>blockquote]:bg-blue-50 [&>blockquote]:pl-4 [&>blockquote]:py-2 [&>blockquote]:my-3 [&>blockquote]:rounded-r-lg
                           [&>hr]:my-4 [&>hr]:border-gray-200
                           [&>em]:text-gray-600 [&>em]:text-xs
                           [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-2
-                          [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-2"
+                          [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-2
+                          [&>li]:mb-1"
                         dangerouslySetInnerHTML={{ __html: marked(message.content) }}
                       />
                     ) : (
