@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { MessageCircle, Send, Car, Book, User, Bot, Loader, CheckCircle, AlertCircle, Plus, ExternalLink } from "lucide-react";
 import { marked } from 'marked';
 
+// ✅ .env에서 불러오기
+const BASE_URL = "https://qa-backend-faiss.fly.dev";
+
 // marked 설정
 marked.setOptions({
   headerIds: false,
@@ -26,7 +29,7 @@ function App() {
 
   const fetchVehicles = async () => {
     try {
-      const res = await fetch('http://localhost:8000/vehicles');
+      const res = await fetch(`${BASE_URL}/vehicles`);
       const data = await res.json();
       setAllVehicles(data.vehicles);
       setAvailableVehicles(data.available_vehicles);
@@ -78,7 +81,7 @@ function App() {
     setLoadingStep("매뉴얼 검색 중...");
 
     try {
-      const res = await fetch(`http://localhost:8000/ask`, {
+      const res = await fetch(`${BASE_URL}/ask`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
