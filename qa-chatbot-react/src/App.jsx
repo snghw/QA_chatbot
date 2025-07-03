@@ -3,8 +3,8 @@ import { MessageCircle, Send, Car, Book, User, Bot, Loader, CheckCircle, AlertCi
 import { marked } from 'marked';
 
 // ✅ .env에서 불러오기
-// const BASE_URL = "https://qa-backend-faiss.fly.dev";
-const BASE_URL = "http://localhost:8080"
+const BASE_URL = "https://qa-backend-faiss.fly.dev";
+// const BASE_URL = "http://localhost:8080"
 
 // marked 설정
 marked.setOptions({
