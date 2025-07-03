@@ -15,8 +15,8 @@ marked.setOptions({
 function App() {
   const [question, setQuestion] = useState("");
   const [selectedVehicle, setSelectedVehicle] = useState("");
-  const [availableVehicles, setAvailableVehicles] = useState(["SONATA", "SANTAFE", "TUCSON", "AVANTE", "GRANDEUR", "PALISADE"]);
-  const [allVehicles, setAllVehicles] = useState(["SONATA", "SANTAFE", "TUCSON", "AVANTE", "GRANDEUR", "PALISADE"]);
+  const [availableVehicles, setAvailableVehicles] = useState([]);
+  const [allVehicles, setAllVehicles] = useState(["SONATA", "SANTAFE", "TUCSON", "AVANTE", "GRANDEUR", "PALISADE", "KONA"]);
   const [vehicleSelectionStep, setVehicleSelectionStep] = useState(true);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -158,85 +158,156 @@ function App() {
           </div>
         </div>
 
-        {/* Vehicle Selection */}
+        {/* Main Content */}
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-b">
-              <h2 className="text-xl font-bold text-gray-800 mb-2">차량을 선택해주세요</h2>
-              <p className="text-gray-600">질문하실 차량의 매뉴얼을 선택해주세요.</p>
-            </div>
-
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {allVehicles.map((vehicle) => {
-                  const isAvailable = availableVehicles.includes(vehicle);
-                  
-                  return (
-                    <div
-                      key={vehicle}
-                      className={`p-4 rounded-xl border-2 transition-all duration-200 ${
-                        isAvailable
-                          ? 'border-gray-200 bg-white hover:border-blue-400 hover:shadow-lg hover:bg-blue-50 cursor-pointer'
-                          : 'border-gray-100 bg-gray-50'
-                      }`}
-                      onClick={() => isAvailable && selectVehicle(vehicle)}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-gray-800">{vehicle}</h3>
-                        {isAvailable ? (
-                          <CheckCircle className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <AlertCircle className="w-5 h-5 text-gray-400" />
-                        )}
-                      </div>
-                      <p className={`text-sm ${isAvailable ? 'text-gray-600' : 'text-gray-400'}`}>
-                        {isAvailable ? '매뉴얼 사용 가능' : '매뉴얼 준비 중'}
-                      </p>
-                      
-                      {!isAvailable && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleManualUpload(vehicle);
-                          }}
-                          className="w-full mt-3 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
-                        >
-                          <Plus className="w-4 h-4" />
-                          <span>매뉴얼 등록하기</span>
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-              
-              {/* 공식 홈페이지 및 매뉴얼 등록 버튼 */}
-              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={openOfficialManual}
-                  className="inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
-                >
-                  <ExternalLink className="w-5 h-5" />
-                  <span>현대자동차 공식 매뉴얼 사이트</span>
-                </button>
-                
-                <button
-                  onClick={() => alert('매뉴얼 업로드 기능은 곧 추가될 예정입니다.')}
-                  className="inline-flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
-                >
-                  <Plus className="w-5 h-5" />
-                  <span>새 매뉴얼 등록하기</span>
-                </button>
-              </div>
-
-              {availableVehicles.length === 0 && (
-                <div className="text-center py-8">
-                  <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-600 mb-2">사용 가능한 매뉴얼이 없습니다</h3>
-                  <p className="text-gray-500 mb-4">아래 버튼을 통해 매뉴얼을 등록하거나 공식 사이트를 확인해주세요.</p>
+            
+            {/* 매뉴얼이 없는 경우 메인 메시지 */}
+            {availableVehicles.length === 0 ? (
+              <>
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-b">
+                  <h2 className="text-xl font-bold text-gray-800 mb-2">현대자동차 매뉴얼 QA 시스템</h2>
+                  <p className="text-gray-600">AI 기반 차량 매뉴얼 질의응답 서비스</p>
                 </div>
-              )}
-            </div>
+
+                <div className="p-8 text-center">
+                  <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Book className="w-10 h-10 text-blue-600" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-gray-800 mb-4">매뉴얼 등록이 필요합니다</h3>
+                  <p className="text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">
+                    아직 등록된 차량 매뉴얼이 없습니다.<br />
+                    아래 방법으로 매뉴얼을 확인하거나 등록해주세요.
+                  </p>
+
+                  {/* 액션 버튼들 */}
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <button
+                      onClick={openOfficialManual}
+                      className="inline-flex items-center justify-center space-x-3 bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-4 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
+                    >
+                      <ExternalLink className="w-6 h-6" />
+                      <span>현대자동차 공식 매뉴얼 사이트</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => alert('매뉴얼 업로드 기능은 곧 추가될 예정입니다.')}
+                      className="inline-flex items-center justify-center space-x-3 bg-gray-600 hover:bg-gray-700 text-white font-medium px-8 py-4 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
+                    >
+                      <Plus className="w-6 h-6" />
+                      <span>새 매뉴얼 등록하기</span>
+                    </button>
+                  </div>
+
+                  {/* 지원 차량 목록 */}
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4">지원 예정 차량</h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                      {allVehicles.map((vehicle) => (
+                        <div
+                          key={vehicle}
+                          className="bg-white border-2 border-gray-200 rounded-lg p-3 text-center"
+                        >
+                          <div className="flex items-center justify-center space-x-2">
+                            <Car className="w-4 h-4 text-gray-400" />
+                            <span className="font-medium text-gray-700">{vehicle}</span>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">준비 중</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 안내 메시지 */}
+                  <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-left">
+                        <h5 className="font-semibold text-blue-800 mb-1">매뉴얼 등록 안내</h5>
+                        <p className="text-sm text-blue-700">
+                          • 현재 매뉴얼 자동 등록 기능을 개발 중입니다<br />
+                          • 공식 현대자동차 매뉴얼 사이트에서 차량별 매뉴얼을 확인하실 수 있습니다<br />
+                          • 등록 기능 완료 시 이메일로 안내드리겠습니다
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* 매뉴얼이 있는 경우 기존 차량 선택 UI */
+              <>
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-b">
+                  <h2 className="text-xl font-bold text-gray-800 mb-2">차량을 선택해주세요</h2>
+                  <p className="text-gray-600">질문하실 차량의 매뉴얼을 선택해주세요.</p>
+                </div>
+
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {allVehicles.map((vehicle) => {
+                      const isAvailable = availableVehicles.includes(vehicle);
+                      
+                      return (
+                        <div
+                          key={vehicle}
+                          className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                            isAvailable
+                              ? 'border-gray-200 bg-white hover:border-blue-400 hover:shadow-lg hover:bg-blue-50 cursor-pointer'
+                              : 'border-gray-100 bg-gray-50'
+                          }`}
+                          onClick={() => isAvailable && selectVehicle(vehicle)}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold text-gray-800">{vehicle}</h3>
+                            {isAvailable ? (
+                              <CheckCircle className="w-5 h-5 text-green-500" />
+                            ) : (
+                              <AlertCircle className="w-5 h-5 text-gray-400" />
+                            )}
+                          </div>
+                          <p className={`text-sm ${isAvailable ? 'text-gray-600' : 'text-gray-400'}`}>
+                            {isAvailable ? '매뉴얼 사용 가능' : '매뉴얼 준비 중'}
+                          </p>
+                          
+                          {!isAvailable && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleManualUpload(vehicle);
+                              }}
+                              className="w-full mt-3 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Plus className="w-4 h-4" />
+                              <span>매뉴얼 등록하기</span>
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* 공식 홈페이지 및 매뉴얼 등록 버튼 */}
+                  <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={openOfficialManual}
+                      className="inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                      <span>현대자동차 공식 매뉴얼 사이트</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => alert('매뉴얼 업로드 기능은 곧 추가될 예정입니다.')}
+                      className="inline-flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-medium px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
+                    >
+                      <Plus className="w-5 h-5" />
+                      <span>새 매뉴얼 등록하기</span>
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
