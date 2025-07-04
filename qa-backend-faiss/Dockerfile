@@ -10,14 +10,14 @@ RUN apt-get update && apt-get install -y \
 
 # Python 의존성 복사 및 설치
 COPY requirements.txt .
+# ✅ openai만 먼저 명시적으로 강제 설치
+RUN pip install --no-cache-dir openai==1.6.1 && pip show openai
+
+# 나머지 의존성 설치 (순서가 중요)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 📦 JSON 파일과 pickle 파일들 복사
-# COPY data/processed/*.json ./data/processed/
-# COPY data/processed/*.pkl ./data/processed/
-
 # 나머지 코드 복사
-COPY . .
+COPY . /app
 
 # ✅ 포트 노출
 EXPOSE 8080

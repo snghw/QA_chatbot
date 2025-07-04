@@ -48,20 +48,20 @@ class AnswerGenerator:
 """
 
         try:
-            import openai
-            client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            from openai import OpenAI
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
             response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=1200,
-                temperature=0.3
+                temperature=0.3,
             )
-
             answer = self._make_answer_friendly(response.choices[0].message.content.strip())
             return self._add_source_info(answer, section_data)
 
         except Exception as e:
+            print(f"❌ OpenAI 호출 에러: {e}")
             return f"앗, 답변을 생성하는 중에 문제가 생겼어요. 다시 한 번 질문해주시면 도와드릴게요! 😊"
 
     def _analyze_question_intent(self, question: str) -> str:
