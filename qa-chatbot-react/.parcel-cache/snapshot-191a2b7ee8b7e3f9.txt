@@ -26,7 +26,7 @@
 94C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\@parcel\cache\lib\LMDBCache.js133959373098553134 0
 78C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\mkdirp\LICENSE133959386307233409 0
 70C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\devlop133960030564715990 1
-55C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist133960428619281967 1
+55C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist133960677128619737 1
 103C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\plug.js.map133959380523637052 0
 112C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\headphone-off.js.map133959380517754087 0
 80C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\term-size\vendor133960031081275165 1
@@ -106,7 +106,7 @@
 106C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\dollar-sign.js133959380491202339 0
 102C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\@swc\helpers\src\_get_prototype_of.mjs133959373116421468 0
 100C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\brush.js133959380487993696 0
-62C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\src\App.jsx133960428659203263 0
+62C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\src\App.jsx133960676989868838 0
 109C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\list-video.js.map133959380519662114 0
 105C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\badge-plus.js133959380486564309 0
 87C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\normalize-range\license133959382729977295 0
@@ -125,7 +125,7 @@
 78C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\type-fest\ts41133960031084054927 1
 118C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\bluetooth-searching.js.map133959380511609679 0
 102C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\gem.js.map133959380517098861 0
-63C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\src\index.js133960350052643331 0
+63C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\src\index.js133960677034176501 0
 80C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\minizlib\LICENSE133959386307233409 0
 103C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\sandwich.js133959380503982616 0
 110C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\book-headphones.js133959380487455890 0
@@ -811,7 +811,7 @@
 115C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\creative-commons.js.map133959380514714808 0
 108C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\react-dom\cjs\react-dom-client.production.js133959372760012745 0
 91C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\semver\ranges\intersects.js133959373100444575 0
-66C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\index.html133960428618136594 0
+66C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\index.html133960639883457184 0
 109C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\lucide-react\dist\esm\icons\case-sensitive.js133959380488600608 0
 115C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\caniuse-lite\data\features\native-filesystem-api.js133959373118789139 0
 89C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\utility-types\SECURITY.md133959373099288966 0
@@ -8305,8 +8305,8 @@
 79C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\.bin\semver.cmd133959373123535981 0
 91C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\.bin\update-browserslist-db133959373123550168 0
 95C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\node_modules\.bin\update-browserslist-db.ps1133959373123535981 0
-84C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\qa-chatbot-react.31b563d9.js133960428619201789 0
-88C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\qa-chatbot-react.31b563d9.js.map133960428619271978 0
+84C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\qa-chatbot-react.31b563d9.js133960677128443716 0
+88C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\qa-chatbot-react.31b563d9.js.map133960677128608492 0
 84C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\qa-chatbot-react.582aa7b5.js133960047548452735 0
 88C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\qa-chatbot-react.582aa7b5.js.map133960047548597076 0
 89C:\Users\emily\Desktop\QA_chatbot\qa-chatbot-react\dist\qa-chatbot-react.aa436662.css.map133959386954117071 0
